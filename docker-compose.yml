@@ -3,10 +3,29 @@ version: '3.4'
 services:
   booth:
     image: booth
-
+    container_name: booth
+    command: sh -c "gunicorn app.wsgi:application -b 0.0.0.0:5353"
+    env_file:
+      - .env
     build:
       context: .
       dockerfile: ./Dockerfile
-    command: sh -c "gunicorn app.wsgi:application -b 0.0.0.0:5353"
+    volumes:
+      - ./app:/app
+      - /app/static:/static
     ports:
       - 5656:5656
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+    
