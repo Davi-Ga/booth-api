@@ -25,7 +25,7 @@
 					"--nothreading",
 					"--noreload"
 				],
-				"file": "app/manage.py"
+				"file": "src/manage.py"
 			}
 		}
 	]
