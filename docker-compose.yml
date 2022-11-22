@@ -42,4 +42,23 @@ services:
     depends_on:
       - booth
 
-    
+# Creates a new service called redis with Redis cache
+    redis:
+      image: redis:latest
+      container_name: redis
+      restart: always
+
+# Creates a new service called celery with Celery worker
+    celery:
+      build: 
+        context: .
+      container_name: celery
+      command: celery -A app worker -l info
+      env_file:
+        - .env
+      volumes:
+        - ./src:/app
+      depends_on:
+        - redis
+        - booth
+        - postgres
