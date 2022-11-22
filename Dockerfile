@@ -6,13 +6,14 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /app
-# Install pip requirements
+# Install pip requirements and install psycopg2 dependencies
 COPY requirements.txt .
 RUN apk update
 RUN apk add --no-cache postgresql-dev gcc python3-dev musl-dev
-RUN python -m pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install --no-cache-dir --upgrade -r requirements.txt
 
+# Creates a directory app in the container and copy the current directory to the container
+WORKDIR /app
 COPY . /app
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
