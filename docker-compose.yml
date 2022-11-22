@@ -1,4 +1,6 @@
 services:
+
+# Creates a new service called booth with Django application
   booth:
     image: booth
     container_name: booth
@@ -16,6 +18,7 @@ services:
     depends_on:
       - postgres
 
+# Creates a new service called postgres with Postgres database
   postgres:
     image: postgres:13
     container_name: postgres
@@ -25,7 +28,8 @@ services:
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-  
+
+# Creates a new service called nginx with Nginx web server 
   nginx:
     image: nginx:latest
     container_name: nginx
