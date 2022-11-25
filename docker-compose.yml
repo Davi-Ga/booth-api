@@ -26,8 +26,10 @@ services:
     env_file:
       - .env
     environment:
+      POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+  
 
 # Creates a new service called nginx with Nginx web server 
   nginx:
@@ -56,6 +58,12 @@ services:
       command: celery -A app worker -l info
       env_file:
         - .env
+      environment:
+        - DB_HOST: ${DB_HOST}
+        - DB_NAME: ${DB_NAME}
+        - DB_USER: ${DB_USER}
+        - DB_PASS: ${DB_PASSWORD}
+
       volumes:
         - ./src:/app
       depends_on:
