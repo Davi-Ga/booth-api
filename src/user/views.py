@@ -7,14 +7,15 @@ def register(request):
         return redirect('home')
     else:
         try:
-            form=RegisterForm(request.POST)
-            if form.is_valid():
-                form.save()
-                return redirect('register')
-            context={
-                'form':form
-            }
-            return render(request,'register.html',context=context)
+            if request.method=='POST':
+                form=RegisterForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    return redirect('register')
+                context={
+                    'form':form
+                }
+                return render(request,'register.html',context=context)
 
         except:
             print("error")
