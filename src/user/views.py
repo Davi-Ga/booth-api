@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from forms import RegisterForm
 
+#ajustar esse registro
 def register(request):
     form=RegisterForm()
     if request.user.is_authenticated:
