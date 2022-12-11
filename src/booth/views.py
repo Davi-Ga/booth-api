@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import request
-from models import Booth,User
+from models import Booth
 
 def home(request):
     Booth.object.all()
