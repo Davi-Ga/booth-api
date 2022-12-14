@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from django.messages import constants 
 
 env=os.path.join(os.path.dirname(__file__),'.env')
 load_dotenv(env)
