@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-from django.messages import constants 
+from django.contrib.messages import constants 
 
 env=os.path.join(os.path.dirname(__file__),'.env')
 load_dotenv(env)
@@ -138,5 +138,9 @@ MEDIA_URL = "media/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MESSAGE_TAGS={
-    
+    constants.DEBUG: 'alert-primary',
+    constants.INFO: 'alert-info',
+    constants.SUCCESS: 'alert-success',
+    constants.WARNING: 'alert-warning',
+    constants.ERROR: 'alert-danger',
 }
