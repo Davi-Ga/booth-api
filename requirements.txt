@@ -4,3 +4,5 @@ psycopg2
 psycopg2-binary
 gunicorn
 python-dotenv
+celery
+redis
