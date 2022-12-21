@@ -7,14 +7,14 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Install pip requirements and install psycopg2 dependencies
-COPY requirements.txt .
+COPY ./requirements.txt /requirements.txt
 RUN apk update
 RUN apk add --no-cache postgresql-dev gcc python3-dev musl-dev
 RUN pip install --upgrade pip && pip install --no-cache-dir --upgrade -r requirements.txt
 
 # Creates a directory app in the container and copy the current directory to the container
 WORKDIR /app
-COPY . /app
+COPY ./src /app
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
