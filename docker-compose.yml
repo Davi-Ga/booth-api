@@ -1,8 +1,8 @@
 services:
 
 # Creates a new service called booth with Django application
-  booth:
-    image: booth
+  web:
+    image: web
     container_name: booth
     command: sh -c "gunicorn app.wsgi:application -b 0.0.0.0:5656"
     env_file:
@@ -12,23 +12,53 @@ services:
       dockerfile: ./Dockerfile
     volumes:
       - ./src:/app
-      - /src/static:/static
+      - ./src/static:/static
     expose:
       - 5656:5656
     depends_on:
-      - postgres
+      - db
 
-# Creates a new service called postgres with Postgres database
-  postgres:
+# Creates a new service called db with Postgres database
+  db:
     image: postgres:13
     container_name: postgres
     restart: always
+    volumes:
+      - booth_base:/var/lib/postgresql/data
     env_file:
       - .env
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: 
+        [
+          "CMD-SHELL", 
+          "pg_isready -U ${DB_USER} -d ${DB_NAME}"
+        ]
+      interval: 4s
+      timeout: 7s
+      retries: 40
+    
+  migrate:
+    container_name: migrate
+    command: python manage.py migrate --noinput
+    build: .
+    env_file:
+      - .env
+    healthcheck:
+      test: 
+        [
+          "CMD-SHELL",  
+          "python manage.py migrate --check --dry-run"
+        ]
+      interval: 4s
+      timeout: 7s
+      retries: 40
+    depends_on:
+      db:
+        condition: service_healthy
   
 
 # Creates a new service called nginx with Nginx web server 
@@ -40,9 +70,9 @@ services:
       - 5656:5656
     volumes:
       - ./nginx:/etc/nginx/conf.d
-      - ./src:/app
+      - ./static:/static
     depends_on:
-      - booth
+      - web
 
 # Creates a new service called redis with Redis cache
     redis:
@@ -68,5 +98,9 @@ services:
         - ./src:/app
       depends_on:
         - redis
-        - booth
-        - postgres
+        - web
+        - db
+
+volumes:
+  booth_base:
+    external: true
