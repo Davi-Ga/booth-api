@@ -1,8 +1,8 @@
 version: '3.4'
 
 services:
-  booth:
-    image: booth
+  web:
+    image: web
     build:
       context: .
       dockerfile: ./Dockerfile
