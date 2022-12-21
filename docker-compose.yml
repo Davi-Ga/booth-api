@@ -1,5 +1,73 @@
 services:
 
+# Creates a new service called db with Postgres database
+  db:
+    image: postgres:13
+    container_name: postgres
+    restart: always
+    volumes:
+      - booth_base:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    healthcheck:
+      test: 
+        [
+          "CMD-SHELL", 
+          "pg_isready -U ${DB_USER} -d ${DB_NAME}"
+        ]
+      interval: 4s
+      timeout: 7s
+      retries: 40
+    
+  # migrate:
+  #   container_name: migrate
+  #   command: python manage.py migrate --noinput
+  #   build: .
+  #   env_file:
+  #     - .env
+  #   healthcheck:
+  #     test: 
+  #       [
+  #         "CMD-SHELL",  
+  #         "python manage.py migrate --check --dry-run"
+  #       ]
+  #     interval: 4s
+  #     timeout: 7s
+  #     retries: 40
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  
+# Creates a new service called redis with Redis cache
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+
+#Creates a new service called celery with Celery worker
+  celery:
+    container_name: celery
+    restart: always
+    build: .
+    command: sh -c "celery -A app worker -l info"
+    env_file:
+      - .env
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASSWORD}
+    volumes:
+      - ./src:/app
+    depends_on:
+      - redis
+      - web
+      - db
+
 # Creates a new service called booth with Django application
   web:
     image: web
@@ -18,49 +86,6 @@ services:
     depends_on:
       - db
 
-# Creates a new service called db with Postgres database
-  db:
-    image: postgres:13
-    container_name: postgres
-    restart: always
-    volumes:
-      - booth_base:/var/lib/postgresql/data
-    env_file:
-      - .env
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    healthcheck:
-      test: 
-        [
-          "CMD-SHELL", 
-          "pg_isready -U ${DB_USER} -d ${DB_NAME}"
-        ]
-      interval: 4s
-      timeout: 7s
-      retries: 40
-    
-  migrate:
-    container_name: migrate
-    command: python manage.py migrate --noinput
-    build: .
-    env_file:
-      - .env
-    healthcheck:
-      test: 
-        [
-          "CMD-SHELL",  
-          "python manage.py migrate --check --dry-run"
-        ]
-      interval: 4s
-      timeout: 7s
-      retries: 40
-    depends_on:
-      db:
-        condition: service_healthy
-  
-
 # Creates a new service called nginx with Nginx web server 
   nginx:
     image: nginx:latest
@@ -70,36 +95,10 @@ services:
       - 5656:5656
     volumes:
       - ./nginx:/etc/nginx/conf.d
-      - ./static:/static
+      - ./src/static:/static
+      - ./src:/app
     depends_on:
       - web
-
-# Creates a new service called redis with Redis cache
-    redis:
-      image: redis:latest
-      container_name: redis
-      restart: always
-
-# Creates a new service called celery with Celery worker
-    celery:
-      build: 
-        context: .
-      container_name: celery
-      command: celery -A app worker -l info
-      env_file:
-        - .env
-      environment:
-        - DB_HOST: ${DB_HOST}
-        - DB_NAME: ${DB_NAME}
-        - DB_USER: ${DB_USER}
-        - DB_PASS: ${DB_PASSWORD}
-
-      volumes:
-        - ./src:/app
-      depends_on:
-        - redis
-        - web
-        - db
 
 volumes:
   booth_base:
