@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'booth',
     'user',
+    'celery',
 ]
 
 MIDDLEWARE = [
