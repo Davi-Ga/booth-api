@@ -8,3 +8,7 @@ def validation_email(email):
 def validation_password(password):
     if not re.match(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$", password):
         raise ValidationError('Invalid password')
+    
+def validation_username(username):
+    if not re.match(r"^[a-zA-Z0-9_]*$", username):
+        raise ValidationError('Invalid username')
