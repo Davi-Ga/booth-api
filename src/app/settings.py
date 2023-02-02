@@ -85,7 +85,7 @@ WSGI_APPLICATION = "app.wsgi.application"
 
 DATABASES = {
     "default": {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': str(os.getenv('DB_ENGINE')),
         'NAME': str(os.getenv('DB_NAME')),
         'USER': str(os.getenv('DB_USER')),
         'PASSWORD': str(os.getenv('DB_PASSWORD')),
@@ -97,13 +97,13 @@ DATABASES = {
 #Redis Cache
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379',
+        'BACKEND': str(os.getenv('CACHE_BACKEND')),
+        'LOCATION': str(os.getenv('CACHE_LOCATION')),
     }
 }
 
-CELERY_BROKER_URL = "redis://redis:6379"
-CELERY_RESULT_BACKEND = "redis://redis:6379"
+CELERY_BROKER_URL = str(os.getenv('CELERY_URL'))
+CELERY_RESULT_BACKEND = str(os.getenv('CELERY_URL'))
 
 
 # Password validation
