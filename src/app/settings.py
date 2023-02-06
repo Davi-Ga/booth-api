@@ -154,7 +154,7 @@ MESSAGE_TAGS={
     constants.INFO: 'alert-info',
     constants.SUCCESS: 'alert-success',
     constants.WARNING: 'alert-warning',
-    
+    constants.ERROR: 'alert-danger',
 }
 
 
