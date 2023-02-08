@@ -9,3 +9,9 @@ def home(request):
 
     }
     return render(request,'/home.html',context=context)
+
+def add_booth(request):
+    context={
+
+    }
+    return render(request,'/add_booth.html',context=context)
