@@ -5,5 +5,5 @@ from django import forms
 class BoothCreateForm(forms.ModelForm):
     class Meta:
         model = Booth
-        fields = 'all'
+        fields = ''
         
