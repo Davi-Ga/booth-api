@@ -72,7 +72,8 @@ services:
   web:
     image: web
     container_name: booth
-    command: sh -c "gunicorn app.wsgi:application -b 0.0.0.0:5656"
+    command: sh -c "gunicorn app.wsgi:application --bind 0.0.0.0:5656 --reload "
+    restart: unless-stopped
     env_file:
       - .env
     build:
@@ -82,7 +83,7 @@ services:
       - ./src:/app
       - ./src/static:/static
     expose:
-      - 5656:5656
+      - 5656
     depends_on:
       - db
 
@@ -90,13 +91,11 @@ services:
   nginx:
     image: nginx:latest
     container_name: nginx
-    restart: always
+    restart: unless-stopped
     ports:
       - 5656:5656
     volumes:
       - ./nginx:/etc/nginx/conf.d
-      - ./src/static:/static
-      - ./src:/app
     depends_on:
       - web
 
