@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from forms import RegisterForm
+from .forms import RegisterForm
 from django.views.decorators.cache import cache_page
 
 #ajustar esse registro
