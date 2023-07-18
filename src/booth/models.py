@@ -3,8 +3,8 @@ from django.db import models
 class Booth(models.Model):
     title = models.CharField(max_length=100, unique=True, blank=False, null=False)
     description = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
