@@ -65,14 +65,13 @@ services:
       - ./src:/app
     depends_on:
       - redis
-      - web
+      - backend
       - db
 
 # Creates a new service called booth with Django application
-  web:
-    image: web
+  backend:
+    image: backend
     container_name: booth
-    command: sh -c "gunicorn app.wsgi:application --bind 0.0.0.0:5656 --reload "
     restart: unless-stopped
     env_file:
       - .env
@@ -81,7 +80,6 @@ services:
       dockerfile: ./Dockerfile
     volumes:
       - ./src:/app
-      - ./src/static:/static
     expose:
       - 5656
     depends_on:
@@ -95,9 +93,10 @@ services:
     ports:
       - 5656:5656
     volumes:
+      - ./src:/app
       - ./nginx:/etc/nginx/conf.d
     depends_on:
-      - web
+      - backend
 
 volumes:
   booth_base:
