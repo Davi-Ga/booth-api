@@ -2,7 +2,7 @@
 
 ![Booth Logo](booth_logo.png)
 
-[Leia esta página em português](https://github.com/Davi-Ga/booth-api/blob/main/README.md)  
+:small_blue_diamond:[Leia esta página em português](https://github.com/Davi-Ga/booth-api/blob/main/README.md)  
 
 Booth is a Photo Albums API developed with Django REST Framework, which allows users to create and share their photo albums online. With Booth, users can upload their images into custom albums and share them with friends and family. The API provides advanced album and image management features to offer a complete and secure experience.
 
